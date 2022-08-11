@@ -1,11 +1,13 @@
-import { CloseButton } from "./CloseButton";
+import { CloseButton } from "../CloseButton";
 import { useState } from "react";
 
-import bugImage from "../assets/bug.svg";
-import ideaImage from "../assets/idea.svg";
-import thoughtImage from "../assets/thought.svg";
+import bugImage from "../../assets/bug.svg";
+import ideaImage from "../../assets/idea.svg";
+import thoughtImage from "../../assets/thought.svg";
+import { FeedbackTypeStep } from "./Steps/FeedbackTypeStep";
+import { FeedbackContentStep } from "./Steps/FeedbackContentStep";
 
-const feedbackTypes = {
+export const feedbackTypes = {
   BUG: {
     title: "Problema",
     image: {
@@ -29,10 +31,14 @@ const feedbackTypes = {
   },
 };
 
-type FeedbackType = keyof typeof feedbackTypes;
+export type FeedbackType = keyof typeof feedbackTypes;
 
 export function WidgetForm() {
   const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
+
+  function handleRestartFeedback() {
+    setFeedbackType(null);
+  }
 
   return (
     <div
@@ -42,33 +48,14 @@ export function WidgetForm() {
       items-center shadow-lg
       w-[calc(100vw-2rem)] md:w-auto"
     >
-      <header>
-        <span className="text-xl leading-6">Deixe seu feedback</span>
-
-        <CloseButton />
-      </header>
-
-      <div className="flex py-8 gap-2 w-full">
-        {Object.entries(feedbackTypes).map(([key, value]) => (
-          <button
-            key={key}
-            className="
-            bg-zinc-800 rounded-lg py-5 w-24
-              flex-1 flex-col gap-2 items-center
-              border-2 border-transparent hover:border-brand-500
-              focus:border-brand-500 focus:outline-none"
-            onClick={() => setFeedbackType(key as FeedbackType)}
-            type="button"
-          >
-            <img
-              className={value.image.alt.includes("inseto") ? "ml-3" : ""}
-              src={value.image.source}
-              alt={value.image.alt}
-            />
-            <span>{value.title}</span>
-          </button>
-        ))}
-      </div>
+      {!feedbackType ? (
+        <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
+      ) : (
+        <FeedbackContentStep
+          feedbackType={feedbackType}
+          onFeedbackRestartRequested={handleRestartFeedback}
+        />
+      )}
 
       <footer className="text-xs text-neutral-400">
         Desenvolvido pela{" "}
