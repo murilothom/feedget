@@ -1,3 +1,3 @@
 # feedget
-Projeto criado com ReactJS, Typescript e Tailwind
+Front-end criado com ReactJS, Typescript e Tailwind
 
